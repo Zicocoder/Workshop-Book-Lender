@@ -1,7 +1,6 @@
 package se.lexicon.model;
 
-import java.rmi.server.UID;
-import java.util.UUID;
+import java.util.Arrays;
 
 
 public class Person {
@@ -10,12 +9,11 @@ public class Person {
     private int id;
     private String firstName;
     private String lastName;
-    private Book[] books = new Book[0];
+    private Book[] borrowed = new Book[0];
 
 
-
-    public String getPersonInformation(){
-        return "";
+    private static int getNextID() {
+        return sequencer++;
     }
 
     public Person(String firstName, String lastName) {
@@ -39,16 +37,54 @@ public class Person {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public Book[] getBooks() {
-        return books;
+
+    public Book[] getBorrowed() {
+        return borrowed;
     }
 
-    public void setBooks(Book[] books) {
-        this.books = books;
+    private void setBorrowed(Book[] borrowed) {
+        this.borrowed = borrowed;
     }
 
-    private static int getNextID() {
-    return sequencer++;
+    public void loanBook(Book book) {
+        if (book.isAvailable()) {
+            book.setBorrower(this);
+            Book[] newBorrowed = Arrays.copyOf(borrowed, borrowed.length + 1);
+            newBorrowed[newBorrowed.length - 1] = book;
+            setBorrowed(newBorrowed);
+        } else {
+            throw new RuntimeException("The book is not available");
+
+        }
+
     }
+
+    public void returnBook(Book book) {
+
+        Book[] newBorrowed = new Book[borrowed.length];
+        for (int i = 0, j = 0; i < borrowed.length; i++) {
+
+            if (!borrowed[i].getId().equals(book.getId())) {
+                newBorrowed[j] = borrowed[i];
+                j++;
+
+            }
+        }
+
+        if (newBorrowed.length < borrowed.length) {
+            book.setBorrower(null);
+            borrowed = newBorrowed;
+        } else {
+            throw new RuntimeException("Book was not borrowed");
+        }
+    }
+
+    public String getPersonInformation() {
+        return String.format("First name: %s, last name: %s borrowed books: %s",
+                getFirstName(), getLastName(), Arrays.toString(borrowed));
+
+    }
+
+
 // todo: needs completion UUID.
 }

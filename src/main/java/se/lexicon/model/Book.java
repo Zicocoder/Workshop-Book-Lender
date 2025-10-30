@@ -59,11 +59,12 @@ public class Book {
         return id;
     }
 
-public String getBookInformation() {
-        return String.format("Title: %s, author: %s available %b, borrower (%s)",
+    public String getBookInformation() {
+        return String.format("Title: %s, author: %s, available: %b, borrowed: (%s)",
                 getTitle(), getAuthor(), isAvailable(),
-                getBorrower() == null ? "none" ; getBorrower().getPersonInformation());
+                getBorrower() == null ? "none" : getBorrower().getPersonInformation());
+    }
 
 }
-}
+
 
