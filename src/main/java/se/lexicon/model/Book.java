@@ -52,13 +52,18 @@ public class Book {
 
     public void setBorrower(Person borrower) {
         this.borrower = borrower;
-        setAvailable(false);
+        setAvailable(borrower == null);
     }
 
     public String getId() {
         return id;
     }
 
+public String getBookInformation() {
+        return String.format("Title: %s, author: %s available %b, borrower (%s)",
+                getTitle(), getAuthor(), isAvailable(),
+                getBorrower() == null ? "none" ; getBorrower().getPersonInformation());
 
+}
 }
 
