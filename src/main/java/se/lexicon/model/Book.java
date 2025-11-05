@@ -64,6 +64,10 @@ public class Book {
                 getTitle(), getAuthor(), isAvailable(),
                 getBorrower() == null ? "none" : getBorrower().getPersonInformation());
     }
+    @Override
+    public String toString() {
+        return "\"" + title + "\" by " + author;
+    }
 
 }
 
