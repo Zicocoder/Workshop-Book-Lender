@@ -61,30 +61,40 @@ public class Person {
 
     public void returnBook(Book book) {
 
-        Book[] newBorrowed = new Book[borrowed.length];
-        for (int i = 0, j = 0; i < borrowed.length; i++) {
+        if (book.getBorrower() != this) {
+            throw new RuntimeException("Book was not borrowed by this person");
+        }
 
-            if (!borrowed[i].getId().equals(book.getId())) {
-                newBorrowed[j] = borrowed[i];
-                j++;
 
+        int index = -1;
+        for (int i = 0; i < borrowed.length; i++) {
+            if (borrowed[i].getId().equals(book.getId())) {
+                index = i;
+                break;
             }
         }
 
-        if (newBorrowed.length < borrowed.length) {
-            book.setBorrower(null);
-            borrowed = newBorrowed;
-        } else {
+        if (index == -1) {
             throw new RuntimeException("Book was not borrowed");
         }
+
+
+        Book[] newBorrowed = new Book[borrowed.length - 1];
+        for (int i = 0, j = 0; i < borrowed.length; i++) {
+            if (i != index) {
+                newBorrowed[j++] = borrowed[i];
+            }
+        }
+
+
+        book.setBorrower(null);
+        borrowed = newBorrowed;
     }
+
 
     public String getPersonInformation() {
         return String.format("First name: %s, last name: %s borrowed books: %s",
                 getFirstName(), getLastName(), Arrays.toString(borrowed));
 
     }
-
-
-// todo: needs completion UUID.
 }
